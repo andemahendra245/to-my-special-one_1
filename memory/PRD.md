@@ -34,13 +34,16 @@ A stunning romantic single-page web app for Rishii's birthday (June 18).
 
 ## What's Been Implemented — 2026-02-15
 - [x] All 3 phases (heart → splash → book) with smooth transitions.
+- [x] **Realistic photo flower burst splash**: bright golden flash at center, then 70 actual sunflower/yellow-rose/white-rose photographs explode outward in tight 1.4s burst, then sway gently. Photos preloaded during heart phase for instant burst.
+- [x] **Vintage brown leather diary cover** (rich brown gradients, gold inner borders, leather grain shading).
+- [x] **White grid background** (110×110px grid) with realistic yellow rose & sunflower photographs scattered on both sides.
 - [x] 3D page-flip book (rotateY -180deg around left edge, z-index stacking).
 - [x] Realistic vintage letter modal with full personalized content (My Dearest Rishii … Yours always, Mahendra).
 - [x] Confetti on final wish page (~70 multi-color pieces).
 - [x] Polaroid-style photo placeholders ("your photo here") with rotated frames and Dancing Script captions.
 - [x] Mobile responsive vertical scrapbook (≤768px).
 - [x] All interactive elements have unique `data-testid` attributes.
-- [x] Verified via Playwright screenshots: heart → splash → cover → chapters → letter → final wish.
+- [x] Verified via Playwright screenshots end-to-end.
 
 ## Prioritized Backlog
 - P1: Upload real photos for Meeting #1 and Meeting #2 (currently elegant placeholders).

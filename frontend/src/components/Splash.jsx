@@ -1,19 +1,35 @@
 import { useEffect, useState } from "react";
-import { FlowerByType } from "@/components/FlowerSvgs";
 
-// Generate ~90 burst flowers fanning out in all directions, filling the screen
+// Realistic flower photos used in the burst
+const BURST_PHOTOS = [
+  // Sunflowers (close-up)
+  "https://images.unsplash.com/photo-1533523611631-15e4ef69be08?w=300&q=80&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1666545449593-b337668aa081?w=300&q=80&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1606820152786-272f760f1d0e?w=300&q=80&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1563221923-d90d0a7dcf89?w=300&q=80&auto=format&fit=crop",
+  // Yellow roses
+  "https://images.unsplash.com/photo-1723962768162-52d38d21f94b?w=300&q=80&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1711649883870-7cb75e2e8c3e?w=300&q=80&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1769609300795-52dc154dec3e?w=300&q=80&auto=format&fit=crop",
+  // White roses
+  "https://images.unsplash.com/photo-1551771562-5f6b587637cb?w=300&q=80&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1610247672619-df289f408ff2?w=300&q=80&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1486639107311-064febaff1c5?w=300&q=80&auto=format&fit=crop",
+];
+
+// Build a true "burst" — all flowers explode out from the center
+// in a tight time window (synchronized firework feel)
 const buildBurst = (count) => {
   const items = [];
   for (let i = 0; i < count; i++) {
     const angle = Math.random() * Math.PI * 2;
-    // distance varies — some near center, some far — gives full screen coverage
-    const distance = 8 + Math.pow(Math.random(), 0.6) * 65;
-    const size = 40 + Math.random() * 90;
-    const delay = Math.random() * 1.8;
-    const rot = (Math.random() - 0.5) * 180;
-    // 50% sunflowers, 30% yellow roses, 20% white roses
-    const r = Math.random();
-    const type = r < 0.5 ? "sunflower" : r < 0.8 ? "yrose" : "wrose";
+    // Distance: a healthy spread across the screen (vmax units)
+    const distance = 12 + Math.pow(Math.random(), 0.55) * 58;
+    const size = 50 + Math.random() * 90;
+    // Tight stagger — flowers ride out in waves but very quickly (0-0.65s)
+    const delay = Math.random() * 0.65;
+    const rot = (Math.random() - 0.5) * 200;
+    const photo = BURST_PHOTOS[Math.floor(Math.random() * BURST_PHOTOS.length)];
     items.push({
       id: i,
       dx: Math.cos(angle) * distance,
@@ -21,7 +37,7 @@ const buildBurst = (count) => {
       size,
       delay,
       rot,
-      type,
+      photo,
     });
   }
   return items;
@@ -29,11 +45,19 @@ const buildBurst = (count) => {
 
 const Splash = ({ phase, onStart, onFinish }) => {
   const [fadingHeart, setFadingHeart] = useState(false);
-  const [flowers] = useState(() => buildBurst(95));
+  const [flowers] = useState(() => buildBurst(70));
+
+  // Preload the realistic flower photos while the heart screen is shown
+  useEffect(() => {
+    BURST_PHOTOS.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
 
   useEffect(() => {
     if (phase === "splash") {
-      // burst (~3s) + brand fade (~2s) + hold (~1s) -> 6s total
+      // burst (~2s) + brand fade (~2s) + hold (~2s) -> 6s total
       const t = setTimeout(() => onFinish?.(), 6200);
       return () => clearTimeout(t);
     }
@@ -80,6 +104,8 @@ const Splash = ({ phase, onStart, onFinish }) => {
 
   return (
     <div className="splash-stage" data-testid="splash-stage">
+      {/* Bright burst flash at center */}
+      <div className="burst-flash" aria-hidden="true" />
       <div className="burst-container" data-testid="flower-burst">
         {flowers.map((f) => (
           <div
@@ -90,9 +116,17 @@ const Splash = ({ phase, onStart, onFinish }) => {
               "--dy": `${f.dy}vmax`,
               "--rot": `${f.rot}deg`,
               animationDelay: `${f.delay}s`,
+              width: `${f.size}px`,
+              height: `${f.size}px`,
             }}
           >
-            <FlowerByType type={f.type} size={f.size} idSuffix={`b${f.id}`} />
+            <img
+              src={f.photo}
+              alt=""
+              loading="eager"
+              draggable={false}
+              className="burst-flower-img"
+            />
           </div>
         ))}
       </div>
