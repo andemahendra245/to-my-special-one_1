@@ -61,18 +61,31 @@ const Page3 = () => (
       to me than a lifetime with anyone else.
     </p>
     <div className="polaroid-row" data-testid="photo-gallery">
-      <div className="polaroid">
+      
+      {/* Polaroid 1 */}
+      <div className="className="polaroid"">
         <div className="polaroid-placeholder" data-testid="photo-1">
-          your photo here
+          <img 
+            src="https://ibb.co/FTw9WXZ" 
+            alt="Meeting 1" 
+            className="polaroid-img" 
+          />
         </div>
         <div className="polaroid-caption">Meeting #1</div>
       </div>
-      <div className="polaroid">
+
+      {/* Polaroid 2 */}
+      <div className="className="polaroid"">
         <div className="polaroid-placeholder" data-testid="photo-2">
-          your photo here
+          <img 
+            src="https://ibb.co/CGvWwSx" 
+            alt="Meeting 2" 
+            className="polaroid-img" 
+          />
         </div>
         <div className="polaroid-caption">Meeting #2</div>
       </div>
+
     </div>
   </PageShell>
 );
